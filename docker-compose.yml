@@ -1,0 +1,24 @@
+version: '2'
+services:
+    app:
+        build:
+            context: .test_last/application
+            args:
+                - PATH_TO_PROJECT=/var/www/test_last.app/public
+        container_name: testlast.app
+        volumes:
+          - ./application/public:/var/www/test_last.app/public
+        tty: true
+    php:
+        build:
+            context: .test_last/php
+        container_name: testlast_php
+        volumes_from:
+            - app
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./logs/apache2/:/var/log/apache2
+        links:
+            - app
